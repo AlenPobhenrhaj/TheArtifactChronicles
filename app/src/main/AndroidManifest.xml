@@ -13,13 +13,13 @@
         android:theme="@style/Theme.TheWarlockTheWarriorAndTheHuntressTheArtifactChronicles"
         tools:targetApi="31">
         <activity
-            android:name=".Screens.CharacterSelectScreen"
+            android:name=".screens.CharacterSelectScreen"
             android:exported="false" />
         <activity
-            android:name=".Screens.OptionsScreen"
+            android:name=".screens.OptionsScreen"
             android:exported="false" />
         <activity
-            android:name=".Screens.MainMenuScreen"
+            android:name=".screens.MainMenuScreen"
             android:exported="false" />
         <activity
             android:name=".MainActivity"
