@@ -1,11 +1,23 @@
 package com.example.thewarlockthewarriorandthehuntresstheartifactchronicles.screens
 
 import android.media.MediaPlayer
-import androidx.compose.animation.*
+import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.tween
+import androidx.compose.animation.expandVertically
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
-import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.clickable
+import androidx.compose.foundation.layout.Box
+import androidx.compose.foundation.layout.Column
+import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.height
+import androidx.compose.foundation.layout.padding
+import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.material3.Button
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -25,6 +37,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.TextUnit
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -38,7 +51,7 @@ import kotlinx.coroutines.delay
 *  */
 
 @Composable
-fun CharacterSelectScreen(onStartClicked: () -> Unit) {
+fun CharacterSelectScreen(onStartClicked: (Int) -> Unit) {
     val context = LocalContext.current
     val mediaPlayer = remember {
         MediaPlayer.create(context, R.raw.menu_theme_2) // Replace with your audio file
@@ -55,14 +68,28 @@ fun CharacterSelectScreen(onStartClicked: () -> Unit) {
     }
 
     val characters = listOf(
-        Character("Bard The Barbarian", "The publisher of The Rodent's Gazette...", R.drawable.barbarian_1),
-        Character("Scribblehopper", "I was Sir Geronimo of Stilton's first guide...", R.drawable.necromancer_1),
-        Character("Little Princess Buzzy", "I am the niece of the queen of the bees...", R.drawable.princess_1)
+        Character(
+            "Bard The Barbarian",
+            "The publisher of The Rodent's Gazette",
+            R.drawable.barbarian_1
+        ),
+        Character(
+            "Scribblehopper",
+            "I was Sir Geronimo of Stilton's first guide",
+            R.drawable.necromancer_1
+        ),
+        Character(
+            "Little Princess Buzzy",
+            "I am the niece of the queen of the bees",
+            R.drawable.princess_1
+        )
     )
 
     var currentCharacterIndex by remember { mutableIntStateOf(0) }
 
-    Box(modifier = Modifier.fillMaxSize().background(Color.Black)) {
+    Box(modifier = Modifier
+        .fillMaxSize()
+        .background(Color.Black)) {
         DecorativeBorders()
 
         Box(
@@ -86,7 +113,7 @@ fun CharacterSelectScreen(onStartClicked: () -> Unit) {
                 .align(Alignment.TopCenter)
         ) {
 
-            Spacer(modifier = Modifier.height(16.dp)) // Adjust as needed
+            Spacer(modifier = Modifier.height(12.dp)) // Adjust as needed
 
             val currentCharacter = characters[currentCharacterIndex]
             AnimatedCharacterCard(
@@ -98,15 +125,31 @@ fun CharacterSelectScreen(onStartClicked: () -> Unit) {
             Spacer(modifier = Modifier.height(120.dp)) // Adjust as needed
 
             Row(modifier = Modifier.padding(20.dp)) {
-                Button(onClick = { if (currentCharacterIndex > 0) currentCharacterIndex-- }) {
-                    Text("Back")
-                }
+                Text(
+                    text = "←",
+                    fontSize = 24.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .clickable {
+                            if (currentCharacterIndex > 0) currentCharacterIndex--
+                        }
+                        .padding(8.dp)
+                )
 
                 Spacer(modifier = Modifier.width(8.dp))
 
-                Button(onClick = { if (currentCharacterIndex < characters.size - 1) currentCharacterIndex++ }) {
-                    Text("Next")
-                }
+                Text(
+                    text = "→",
+                    fontSize = 24.sp,
+                    color = Color.White,
+                    textAlign = TextAlign.Center,
+                    modifier = Modifier
+                        .clickable {
+                            if (currentCharacterIndex < characters.size - 1) currentCharacterIndex++
+                        }
+                        .padding(8.dp)
+                )
             }
         }
 
@@ -116,7 +159,10 @@ fun CharacterSelectScreen(onStartClicked: () -> Unit) {
                 .align(Alignment.BottomCenter)
                 .padding(bottom = 32.dp) // Adjust this padding to place the button below the border
         ) {
-            AnimatedButton("Start Adventure", onStartClicked)
+            AnimatedButton("Start Adventure") {
+                val picked = characters[currentCharacterIndex].drawable
+                onStartClicked(picked)
+            }
         }
     }
 }
@@ -188,12 +234,3 @@ fun DecorativeBorders() {
     }
 }
 
-@Composable
-fun ThemedButton(text: String, onClick: () -> Unit) {
-    Button(
-        onClick = onClick, modifier = Modifier.padding(8.dp)
-        // Add button theming here
-    ) {
-        Text(text)
-    }
-}
